@@ -74,6 +74,10 @@ section h3 {
   margin-bottom: 8px;
 }
 
+.activity-advisor a {
+  color: #0066cc;
+}
+
 /* New styles for participants section */
 .participants-container {
   margin-top: 15px;
