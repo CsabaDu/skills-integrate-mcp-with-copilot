@@ -21,6 +21,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const spotsLeft =
           details.max_participants - details.participants.length;
 
+        const advisor = document.createElement("p");
+        advisor.className = "activity-advisor";
+        if (details.advisor) {
+          const advisorName = document.createElement("strong");
+          advisorName.textContent = `Faculty advisor: ${details.advisor.name}`;
+          advisor.appendChild(advisorName);
+
+          const advisorEmail = document.createElement("a");
+          advisorEmail.href = `mailto:${details.advisor.email}`;
+          advisorEmail.textContent = details.advisor.email;
+          advisor.append(" · ", advisorEmail);
+        } else {
+          advisor.textContent = "Faculty advisor: Unassigned";
+        }
+
         // Create participants HTML with delete icons instead of bullet points
         const participantsHTML =
           details.participants.length > 0
@@ -48,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
 
         activitiesList.appendChild(activityCard);
+        activityCard.insertBefore(advisor, activityCard.children[2]);
 
         // Add option to select dropdown
         const option = document.createElement("option");
