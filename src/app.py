@@ -14,7 +14,6 @@ from pydantic import BaseModel, Field
 from typing import Optional
 import json
 import os
-import re
 import secrets
 from pathlib import Path
 
@@ -97,8 +96,8 @@ activities = {
 
 
 class FacultyAdvisor(BaseModel):
-    name: str
-    email: str
+    name: str = Field(min_length=1, max_length=100)
+    email: str = Field(min_length=3, max_length=254)
 
 
 class FacultyAdvisorUpdate(BaseModel):
@@ -158,7 +157,16 @@ def update_activity_advisor(
 
     name = update.advisor.name.strip()
     email = update.advisor.email.strip()
-    if not name or not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+    email_parts = email.split("@")
+    if (
+        not name
+        or len(email_parts) != 2
+        or not email_parts[0]
+        or "." not in email_parts[1]
+        or email_parts[1].startswith(".")
+        or email_parts[1].endswith(".")
+        or any(character.isspace() for character in email)
+    ):
         raise HTTPException(
             status_code=422,
             detail="Advisor name and a valid school email are required",
